@@ -3,13 +3,13 @@
   <mgt-config>
     <users>
       <entry name="admin">
-        <phash>$1$fhfqjgjl$UKU4H9KWTwmKrxropu9BK.</phash>
+        <phash>$1$frsivhvb$7Fl1J3jPmsoa4qX9O1IbW0</phash>
         <permissions>
           <role-based>
             <superuser>yes</superuser>
           </role-based>
         </permissions>
-        <public-key>c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFCQVFDR3ZDNHZmYk1JbXVSSTlnNGx5SkJRQ0NNSUFjZk0wemVMM2VFM0REdlRkRmYrYzZLOHVJUlRwUk01MHo0TVEwTXd1TEo0Rk1iclQ5ZVRsaEZaZitYcjVBZzJ2R2xIRE9zcEEwSWtmbzZXaTBwYnQ1d1hYV1YwOCs1Tk9GRkpXNm13YThvWUV3RUtHZWlDTEJnRWMyRTgzaXo3alNiNkRST3hXakxDOWVkZmR0ZmNTSzhlNW1kbmRZUkVMK3ZoaSt1QUZac0RpTEhMWGNpeFlaU0xML0xvcmIzK2hnOVdsejQwR0IwMmVsRk1Oc3hJSFdzVUQxMDFVelJzWWFxYWVVWjRuNDlxOVhtc1ZxazVkbHRhcTdtYitWNTZqaVBvVG1wZGNjNjZycGtqWFNjK2NFWGMzaitNbUFRd1F5RkFjbDI2dzlGb3pvUmo4MmY0REx3SncwaEIgamZyYW5rbGluMg==</public-key>
+        <public-key>c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFCQVFDR0FNVjF0dzdibGl3Qlg1YVZVaCtVR29YbHJjdG1GVXFQUXlPY2EwUFhnQVVCcVUyeVRoeko0KzdwRFhValFMcFM3K1JlVXFLNjlMM2xWR3dhQUd4Mk4rTGdHZ1lteXRCb2lZa09UbHRBVU9xQkJMWUVhQjMvTmkzWTlGWFVNbzQrdkdxdi95eklWak5YK2duVDV1Tzh4QkpuNWUvUkE0RTBUdG9WaHBucGl3a2tkdFFVbGJYSEpEZ0RWT1NqM2xuZTBJKzM5dHp5ZGJ2Q0swdnlENEZqaWh1NTIreXhldWFSd1NSRll2S09EV083dVFEZmJxdFVJeDJYeTBMQ25xNFZsS0xHTEwyVHdnWXcrVnlIa3RDZ3dmTE1ZQUZGYlFiRkJNcThEQmRjQzUzL09OYitObmtPV0s5STdsZXp2QjFIWjE0V25TeFdUNUgrTWJ1VVRSR1QgbXJtLXdlc3R1czEta2V5</public-key>
       </entry>
     </users>
   </mgt-config>
@@ -452,7 +452,33 @@
     <entry name="localhost.localdomain">
       <network>
         <interface>
-          <ethernet/>
+          <ethernet>
+            <entry name="ethernet1/2">
+              <layer3>
+                <adjust-tcp-mss>
+                  <enable>no</enable>
+                </adjust-tcp-mss>
+                <dhcp-client>
+                  <enable>yes</enable>
+                  <create-default-route>no</create-default-route>
+                </dhcp-client>
+              </layer3>
+              <comment>Web interface</comment>
+            </entry>
+            <entry name="ethernet1/1">
+              <layer3>
+                <interface-management-profile>Allow ping</interface-management-profile>
+                <adjust-tcp-mss>
+                  <enable>no</enable>
+                </adjust-tcp-mss>
+                <dhcp-client>
+                  <enable>yes</enable>
+                  <create-default-route>yes</create-default-route>
+                </dhcp-client>
+              </layer3>
+              <comment>External interface</comment>
+            </entry>
+          </ethernet>
         </interface>
         <profiles>
           <monitor-profile>
@@ -536,7 +562,21 @@
               <strip-mptcp-option>global</strip-mptcp-option>
             </entry>
           </zone-protection-profile>
-          <interface-management-profile/>
+          <interface-management-profile>
+            <entry name="Allow ping">
+              <ping>yes</ping>
+              <telnet>no</telnet>
+              <ssh>no</ssh>
+              <http>no</http>
+              <http-ocsp>no</http-ocsp>
+              <https>no</https>
+              <snmp>no</snmp>
+              <response-pages>no</response-pages>
+              <userid-service>no</userid-service>
+              <userid-syslog-listener-ssl>no</userid-syslog-listener-ssl>
+              <userid-syslog-listener-udp>no</userid-syslog-listener-udp>
+            </entry>
+          </interface-management-profile>
         </profiles>
         <ike>
           <crypto-profiles>
@@ -676,8 +716,21 @@
         </qos>
         <virtual-router>
           <entry name="default">
-            <admin-dists/>
-            <interface/>
+            <admin-dists>
+              <static>10</static>
+              <static-ipv6>10</static-ipv6>
+              <ospf-int>30</ospf-int>
+              <ospf-ext>110</ospf-ext>
+              <ospfv3-int>30</ospfv3-int>
+              <ospfv3-ext>110</ospfv3-ext>
+              <ibgp>200</ibgp>
+              <ebgp>20</ebgp>
+              <rip>120</rip>
+            </admin-dists>
+            <interface>
+              <member>ethernet1/1</member>
+              <member>ethernet1/2</member>
+            </interface>
           </entry>
         </virtual-router>
       </network>
@@ -687,13 +740,13 @@
           <timezone>UTC</timezone>
           <update-server>updates.paloaltonetworks.com</update-server>
           <server-verification>yes</server-verification>
+          <login-banner>Gold 1.0 - PANOS 8.0</login-banner>
           <dns-setting>
             <servers>
               <primary>10.0.0.2</primary>
               <secondary>10.0.0.2</secondary>
             </servers>
           </dns-setting>
-          <login-banner>Gold 1.0 - PANOS 8.0</login-banner>
           <service>
             <disable-telnet>yes</disable-telnet>
             <disable-http>yes</disable-http>
@@ -758,7 +811,7 @@
                   <accept-dhcp-domain>no</accept-dhcp-domain>
                 </dhcp-client>
               </type>
-              <public-key>c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFCQVFDR3ZDNHZmYk1JbXVSSTlnNGx5SkJRQ0NNSUFjZk0wemVMM2VFM0REdlRkRmYrYzZLOHVJUlRwUk01MHo0TVEwTXd1TEo0Rk1iclQ5ZVRsaEZaZitYcjVBZzJ2R2xIRE9zcEEwSWtmbzZXaTBwYnQ1d1hYV1YwOCs1Tk9GRkpXNm13YThvWUV3RUtHZWlDTEJnRWMyRTgzaXo3alNiNkRST3hXakxDOWVkZmR0ZmNTSzhlNW1kbmRZUkVMK3ZoaSt1QUZac0RpTEhMWGNpeFlaU0xML0xvcmIzK2hnOVdsejQwR0IwMmVsRk1Oc3hJSFdzVUQxMDFVelJzWWFxYWVVWjRuNDlxOVhtc1ZxazVkbHRhcTdtYitWNTZqaVBvVG1wZGNjNjZycGtqWFNjK2NFWGMzaitNbUFRd1F5RkFjbDI2dzlGb3pvUmo4MmY0REx3SncwaEIgamZyYW5rbGluMg==</public-key>
+              <public-key>c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFCQVFDR0FNVjF0dzdibGl3Qlg1YVZVaCtVR29YbHJjdG1GVXFQUXlPY2EwUFhnQVVCcVUyeVRoeko0KzdwRFhValFMcFM3K1JlVXFLNjlMM2xWR3dhQUd4Mk4rTGdHZ1lteXRCb2lZa09UbHRBVU9xQkJMWUVhQjMvTmkzWTlGWFVNbzQrdkdxdi95eklWak5YK2duVDV1Tzh4QkpuNWUvUkE0RTBUdG9WaHBucGl3a2tkdFFVbGJYSEpEZ0RWT1NqM2xuZTBJKzM5dHp5ZGJ2Q0swdnlENEZqaWh1NTIreXhldWFSd1NSRll2S09EV083dVFEZmJxdFVJeDJYeTBMQ25xNFZsS0xHTEwyVHdnWXcrVnlIa3RDZ3dmTE1ZQUZGYlFiRkJNcThEQmRjQzUzL09OYitObmtPV0s5STdsZXp2QjFIWjE0V25TeFdUNUgrTWJ1VVRSR1QgbXJtLXdlc3R1czEta2V5</public-key>
               <dns-primary>8.8.8.8</dns-primary>
               <dns-secondary>8.8.4.4</dns-secondary>
             </initcfg>
@@ -839,8 +892,58 @@
             </entry>
           </application>
           <application-group/>
-          <zone/>
-          <service/>
+          <zone>
+            <entry name="TRUST">
+              <network>
+                <layer3>
+                  <member>ethernet1/2</member>
+                </layer3>
+              </network>
+              <enable-user-identification>no</enable-user-identification>
+            </entry>
+            <entry name="UNTRUST">
+              <network>
+                <layer3>
+                  <member>ethernet1/1</member>
+                </layer3>
+              </network>
+              <enable-user-identification>no</enable-user-identification>
+            </entry>
+          </zone>
+          <service>
+            <entry name="service-tcp-221">
+              <protocol>
+                <tcp>
+                  <port>221</port>
+                </tcp>
+              </protocol>
+              <description/>
+            </entry>
+            <entry name="service-tcp-22">
+              <protocol>
+                <tcp>
+                  <port>22</port>
+                </tcp>
+              </protocol>
+              <description/>
+            </entry>
+            <entry name="service-tcp-222">
+              <protocol>
+                <tcp>
+                  <port>222</port>
+                </tcp>
+              </protocol>
+              <description/>
+            </entry>
+            <entry name="service-http-81">
+              <protocol>
+                <tcp>
+                  <port>81</port>
+                </tcp>
+              </protocol>
+              <description/>
+            </entry>
+          </service>
           <service-group/>
           <schedule/>
           <rulebase>
@@ -866,7 +969,270 @@
               </rules>
             </default-security-rules>
             <security>
-              <rules/>
+              <rules>
+                <entry name="SSH inbound">
+                  <rule-type>universal</rule-type>
+                  <description/>
+                  <from>
+                    <member>UNTRUST</member>
+                  </from>
+                  <to>
+                    <member>TRUST</member>
+                  </to>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <negate-source>no</negate-source>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <hip-profiles>
+                    <member>any</member>
+                  </hip-profiles>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <negate-destination>no</negate-destination>
+                  <application>
+                    <member>ssh</member>
+                    <member>ping</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <action>allow</action>
+                  <log-start>no</log-start>
+                  <log-end>yes</log-end>
+                  <disabled>no</disabled>
+                  <icmp-unreachable>no</icmp-unreachable>
+                  <option>
+                    <disable-server-response-inspection>no</disable-server-response-inspection>
+                  </option>
+                </entry>
+                <entry name="SSH 221-222 inbound">
+                  <rule-type>universal</rule-type>
+                  <description/>
+                  <from>
+                    <member>UNTRUST</member>
+                  </from>
+                  <to>
+                    <member>TRUST</member>
+                  </to>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <negate-source>no</negate-source>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <hip-profiles>
+                    <member>any</member>
+                  </hip-profiles>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <negate-destination>no</negate-destination>
+                  <application>
+                    <member>ssh</member>
+                    <member>ping</member>
+                  </application>
+                  <service>
+                    <member>service-tcp-221</member>
+                    <member>service-tcp-222</member>
+                  </service>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <action>allow</action>
+                  <log-start>no</log-start>
+                  <log-end>yes</log-end>
+                  <disabled>no</disabled>
+                  <icmp-unreachable>no</icmp-unreachable>
+                  <option>
+                    <disable-server-response-inspection>no</disable-server-response-inspection>
+                  </option>
+                </entry>
+                <entry name="Allow all ping">
+                  <rule-type>universal</rule-type>
+                  <description/>
+                  <from>
+                    <member>any</member>
+                  </from>
+                  <to>
+                    <member>any</member>
+                  </to>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <negate-source>no</negate-source>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <hip-profiles>
+                    <member>any</member>
+                  </hip-profiles>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <negate-destination>no</negate-destination>
+                  <application>
+                    <member>ping</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <action>allow</action>
+                  <log-start>no</log-start>
+                  <log-end>yes</log-end>
+                  <disabled>no</disabled>
+                  <icmp-unreachable>no</icmp-unreachable>
+                  <option>
+                    <disable-server-response-inspection>no</disable-server-response-inspection>
+                  </option>
+                </entry>
+                <entry name="Permit Health Checks">
+                  <rule-type>universal</rule-type>
+                  <description/>
+                  <from>
+                    <member>UNTRUST</member>
+                  </from>
+                  <to>
+                    <member>TRUST</member>
+                  </to>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <negate-source>no</negate-source>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <hip-profiles>
+                    <member>any</member>
+                  </hip-profiles>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <negate-destination>no</negate-destination>
+                  <application>
+                    <member>elb-healthchecker</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <action>allow</action>
+                  <log-start>no</log-start>
+                  <log-end>yes</log-end>
+                  <disabled>no</disabled>
+                  <icmp-unreachable>no</icmp-unreachable>
+                  <option>
+                    <disable-server-response-inspection>no</disable-server-response-inspection>
+                  </option>
+                </entry>
+                <entry name="Web browsing">
+                  <rule-type>universal</rule-type>
+                  <description/>
+                  <from>
+                    <member>UNTRUST</member>
+                  </from>
+                  <to>
+                    <member>TRUST</member>
+                    <member>UNTRUST</member>
+                  </to>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <negate-source>no</negate-source>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <hip-profiles>
+                    <member>any</member>
+                  </hip-profiles>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <negate-destination>no</negate-destination>
+                  <application>
+                    <member>web-browsing</member>
+                    <member>jenkins</member>
+                  </application>
+                  <service>
+                    <member>service-http</member>
+                    <member>service-http-81</member>
+                  </service>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <action>allow</action>
+                  <log-start>no</log-start>
+                  <log-end>yes</log-end>
+                  <disabled>no</disabled>
+                  <icmp-unreachable>no</icmp-unreachable>
+                  <option>
+                    <disable-server-response-inspection>no</disable-server-response-inspection>
+                  </option>
+                  <profile-setting>
+                    <group>
+                      <member>Inbound</member>
+                    </group>
+                  </profile-setting>
+                </entry>
+                <entry name="Allow all outbound">
+                  <rule-type>universal</rule-type>
+                  <description/>
+                  <from>
+                    <member>TRUST</member>
+                  </from>
+                  <to>
+                    <member>UNTRUST</member>
+                  </to>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <negate-source>no</negate-source>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <hip-profiles>
+                    <member>any</member>
+                  </hip-profiles>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <negate-destination>no</negate-destination>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <action>allow</action>
+                  <log-start>no</log-start>
+                  <log-end>yes</log-end>
+                  <disabled>no</disabled>
+                  <icmp-unreachable>no</icmp-unreachable>
+                  <option>
+                    <disable-server-response-inspection>no</disable-server-response-inspection>
+                  </option>
+                  <profile-setting>
+                    <group>
+                      <member>Outbound</member>
+                    </group>
+                  </profile-setting>
+                </entry>
+              </rules>
             </security>
             <decryption>
               <rules>
@@ -935,7 +1301,68 @@
               </rules>
             </decryption>
             <nat>
-              <rules/>
+              <rules>
+                <entry name="Webserver NAT">
+                  <description/>
+                  <nat-type>ipv4</nat-type>
+                  <from>
+                    <member>UNTRUST</member>
+                  </from>
+                  <to>
+                    <member>UNTRUST</member>
+                  </to>
+                  <to-interface>any</to-interface>
+                  <service>service-http</service>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>10.0.1.10</member>
+                  </destination>
+                  <source-translation>
+                    <dynamic-ip-and-port>
+                      <interface-address>
+                        <interface>ethernet1/2</interface>
+                      </interface-address>
+                    </dynamic-ip-and-port>
+                  </source-translation>
+                  <dynamic-destination-translation>
+                    <translated-address>AWS-Int-NLB</translated-address>
+                    <translated-port>8080</translated-port>
+                  </dynamic-destination-translation>
+                  <disabled>no</disabled>
+                </entry>
+                <entry name="Web1 SSH">
+                  <description/>
+                  <nat-type>ipv4</nat-type>
+                  <from>
+                    <member>UNTRUST</member>
+                  </from>
+                  <to>
+                    <member>UNTRUST</member>
+                  </to>
+                  <to-interface>any</to-interface>
+                  <service>service-tcp-221</service>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>10.0.1.10</member>
+                  </destination>
+                  <source-translation>
+                    <dynamic-ip-and-port>
+                      <interface-address>
+                        <interface>ethernet1/2</interface>
+                      </interface-address>
+                    </dynamic-ip-and-port>
+                  </source-translation>
+                  <destination-translation>
+                    <translated-address>10.0.2.50</translated-address>
+                    <translated-port>22</translated-port>
+                  </destination-translation>
+                  <disabled>no</disabled>
+                </entry>
+              </rules>
             </nat>
           </rulebase>
           <tag>
@@ -955,6 +1382,10 @@
             </entry>
             <entry name="fw-untrust">
               <ip-netmask>10.0.1.10</ip-netmask>
+            </entry>
+            <entry name="AWS-Int-NLB">
+              <fqdn>INT-NLB-2363daba05b5c3a1.elb.us-west-1.amazonaws.com</fqdn>
+              <description>AWS Int NLB Address</description>
             </entry>
           </address>
           <external-list>
@@ -2609,7 +3040,10 @@
           </profile-group>
           <import>
             <network>
-              <interface/>
+              <interface>
+                <member>ethernet1/2</member>
+                <member>ethernet1/1</member>
+              </interface>
               <virtual-router/>
             </network>
           </import>
